@@ -69,7 +69,7 @@
                       <th>Title</th>
                       <th>Status</th>
                     </tr>
-                    <tr v-for="movie in recentActivity" @click="goToMovie(movie)">
+                    <tr v-for="movie in recentActivity" @click="getRoute(movie)">
                       <td width="5%" class="is-hidden-mobile"><i class="fa fa-film" aria-hidden="true"></i></td>
                       <td>{{movie.title}}</td>
                       <td>{{statusMap[movie.status]}}</td>
@@ -112,7 +112,7 @@
                     <tbody>
                     <tr v-for="result in searchResults">
                       <td width="5%"><i class="fa fa-film" aria-hidden="true"></i></td>
-                      <td><router-link to="/my-movies">{{result.title}}</router-link></td>
+                      <td><router-link :to="getRoute(result)">{{result.title}}</router-link></td>
                     </tr>
                     </tbody>
                 </table>
@@ -186,9 +186,25 @@
             return 0;
           });
       },
-      goToMovie: function (movie) {
-        router.push(`/my-movies?movie=${movie.id}`)
-      }
+      getRoute: function (movie) {
+        let status = movie.status;
+        let route = {name: 'MyMovies'};
+        switch (status) {
+          case 'owned':
+            route.name = 'MyMovies';
+            break;
+          case 'loaned':
+            route.name = 'LoanedMovies';
+            break;
+          case 'wishList':
+            route.name = 'MovieWishlist';
+            break;
+          case 'borrowed':
+            route.name = 'BorrowedMovies';
+            break;
+        }
+        return route;
+      },
     }
 }
 </script>
