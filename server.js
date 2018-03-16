@@ -12,7 +12,7 @@ app.use(require('helmet')());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use(express.static('static'));
+app.use(express.static('public'));
 
 let movies = [
   {
@@ -110,5 +110,5 @@ app.put('/movies/:id', function (req, res) {
 });
 
 // app.listen(3000, () => console.log('Server listening on port 3000!'));
-https.createServer(options, app).listen(3444);
+https.createServer(options, app).listen(3444, () => console.log("Listening on port 3444"));
 
