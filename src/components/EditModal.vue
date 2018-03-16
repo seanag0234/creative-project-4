@@ -72,8 +72,7 @@
       }),
       saveItem: async function () {
         try {
-          let res = await updateMovie(this.currentItem.id);
-          console.log(res);
+          let res = await updateMovie(this.item);
           let movies = res.data.movies;
           this.setMovies(movies);
           this.$toaster.success("Movie updated!")

@@ -78,17 +78,24 @@ app.post('/movies', function (req, res) {
 
 app.delete('/movies/:id', function (req, res) {
   let id = req.params.id;
-  console.log(id);
-  let index = -1;
-  let test = movies.map(m => {
-    console.log(m);
-    return m.id;
-  });
-  index = test.indexOf(parseInt(id));
-  console.log(test);
-  console.log(index);
+  let index = movies.map(m => {return m.id}).indexOf(parseInt(id));
   if (index > -1) {
     movies.splice(index, 1);
+    return res.send({movies: movies});
+  } else {
+    return res.status(404).send({message: 'Movie with id ' + id + 'not found'});
+  }
+});
+
+app.put('/movies/:id', function (req, res) {
+  let id = req.params.id;
+  let movie = req.body.movie;
+  if (!movie) {
+    return res.status(400).send({message: "movie param is required"})
+  }
+  let index = movies.map(m => {return m.id}).indexOf(parseInt(id));
+  if (index > -1) {
+    movies[index] = movie;
     return res.send({movies: movies});
   } else {
     return res.status(404).send({message: 'Movie with id ' + id + 'not found'});
