@@ -1,7 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 const app = express();
+const options = {
+  cert: fs.readFileSync('./sslcert/fullchain.pem'),
+  key: fs.readFileSync('./sslcert/privkey.pem')
+};
+app.use(require('helmet')());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
@@ -102,4 +109,6 @@ app.put('/movies/:id', function (req, res) {
   }
 });
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+// app.listen(3000, () => console.log('Server listening on port 3000!'));
+https.createServer(options, app).listen(3444);
+
