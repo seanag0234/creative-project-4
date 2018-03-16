@@ -112,7 +112,7 @@
                     <tbody>
                     <tr v-for="result in searchResults">
                       <td width="5%"><i class="fa fa-film" aria-hidden="true"></i></td>
-                      <td><router-link to="/my-movies">{{result.title}}</router-link></td>
+                      <td><router-link :to="getRoute(result)">{{result.title}}</router-link></td>
                     </tr>
                     </tbody>
                 </table>
@@ -186,8 +186,27 @@
             return 0;
           });
       },
+      getRoute: function (movie) {
+        let status = movie.status;
+        let route = {name: 'MyMovies'};
+        switch (status) {
+          case 'owned':
+            route.name = 'MyMovies';
+            break;
+          case 'loaned':
+            route.name = 'LoanedMovies';
+            break;
+          case 'wishList':
+            route.name = 'MovieWishlist';
+            break;
+          case 'borrowed':
+            route.name = 'BorrowedMovies';
+            break;
+        }
+        return route;
+      },
       goToMovie: function (movie) {
-        router.push(`/my-movies?movie=${movie.id}`)
+        router.push(this.getRoute(movie))
       }
     }
 }

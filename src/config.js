@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000';
+const baseUrl = 'https://seangeorge.club:3444';
 
 export {
   baseUrl

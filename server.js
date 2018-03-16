@@ -1,7 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 const app = express();
+const options = {
+  cert: fs.readFileSync('./sslcert/fullchain.pem'),
+  key: fs.readFileSync('./sslcert/privkey.pem')
+};
+app.use(require('helmet')());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
@@ -29,7 +36,7 @@ let movies = [
   {
     id: 2,
     title: 'Hercules',
-    status: 'owned',
+    status: 'wishList',
     type: 'movie',
     medium: 'DVD',
     info: 'Love the sass',
@@ -47,7 +54,16 @@ let movies = [
   {
     id: 4,
     title: 'Glory Road',
-    status: 'owned',
+    status: 'borrowed',
+    type: 'movie',
+    medium: 'DVD',
+    info: 'Great sports movie',
+    updatedAt: 1267306868000
+  },
+  {
+    id: 5,
+    title: 'She\'s the Man',
+    status: 'loaned',
     type: 'movie',
     medium: 'DVD',
     info: 'Great sports movie',
@@ -55,7 +71,7 @@ let movies = [
   }
 ];
 
-let nextId = 5;
+let nextId = 6;
 
 app.get('/movies', function (req, res) {
   res.send({movies: movies})
@@ -70,8 +86,10 @@ app.post('/movies', function (req, res) {
   if (!movie.title) {
     movie.title = 'Movie ' + nextId;
   }
-  movies.push(movie);
+  movie.id = nextId;
+  movie.updatedAt = Date.now();
   nextId++;
+  movies.push(movie);
 
   res.send({movies: movies})
 });
@@ -95,6 +113,7 @@ app.put('/movies/:id', function (req, res) {
   }
   let index = movies.map(m => {return m.id}).indexOf(parseInt(id));
   if (index > -1) {
+    movie.updatedAt = Date.now();
     movies[index] = movie;
     return res.send({movies: movies});
   } else {
@@ -102,4 +121,6 @@ app.put('/movies/:id', function (req, res) {
   }
 });
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+// app.listen(3000, () => console.log('Server listening on port 3000!'));
+https.createServer(options, app).listen(3444, () => console.log("Listening on port 3444"));
+
