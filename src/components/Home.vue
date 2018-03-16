@@ -69,7 +69,7 @@
                       <th>Title</th>
                       <th>Status</th>
                     </tr>
-                    <tr v-for="movie in recentActivity" @click="gotToMovie(movie)">
+                    <tr v-for="movie in recentActivity" @click="goToMovie(movie)">
                       <td width="5%" class="is-hidden-mobile"><i class="fa fa-film" aria-hidden="true"></i></td>
                       <td>{{movie.title}}</td>
                       <td>{{statusMap[movie.status]}}</td>
