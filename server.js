@@ -77,8 +77,9 @@ app.post('/movies', function (req, res) {
   if (!movie.title) {
     movie.title = 'Movie ' + nextId;
   }
-  movies.push(movie);
+  movie.id = nextId;
   nextId++;
+  movies.push(movie);
 
   res.send({movies: movies})
 });
