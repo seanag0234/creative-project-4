@@ -53,7 +53,8 @@
     computed: {
       ...mapGetters([
         'isAuthenticated',
-        'user'
+        'user',
+        'currentItem'
       ]),
       movies: function () {
         return this.user.movies.filter(m => {

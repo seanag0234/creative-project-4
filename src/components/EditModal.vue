@@ -47,6 +47,7 @@
   import {mapGetters, mapActions} from 'vuex';
   import TypeSelector from './TypeSelector'
   import StatusSelector from "./StatusSelector";
+  import {updateMovie} from "../apiConnector";
   export default {
     components: {
       StatusSelector,
@@ -66,11 +67,20 @@
     },
     methods: {
       ...mapActions({
-        updateItem: 'updateItem',
-        toggleShowEdit: 'toggleShowEdit'
+        toggleShowEdit: 'toggleShowEdit',
+        setMovies: 'setMovies'
       }),
-      saveItem: function () {
-        this.updateItem(this.item);
+      saveItem: async function () {
+        try {
+          let res = await updateMovie(this.currentItem.id);
+          console.log(res);
+          let movies = res.data.movies;
+          this.setMovies(movies);
+          this.$toaster.success("Movie updated!")
+        } catch (e) {
+          console.log(e);
+          this.$toaster.error("Something went wrong")
+        }
         this.toggleShowEdit();
       },
       calcValidity: function () {

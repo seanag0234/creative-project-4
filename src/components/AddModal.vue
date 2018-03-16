@@ -37,7 +37,9 @@
   import {mapGetters, mapActions} from 'vuex';
   import TypeSelector from "./TypeSelector";
   import StatusSelector from "./StatusSelector";
-    export default {
+  import {addMovie} from "../apiConnector";
+
+  export default {
       components: {
         TypeSelector,
         StatusSelector
@@ -52,8 +54,8 @@
       },
       methods: {
         ...mapActions({
-          addItem: 'addItem',
-          toggleShowAddState: 'toggleShowAdd'
+          toggleShowAddState: 'toggleShowAdd',
+          setMovies: 'setMovies'
         }),
         toggleShowAdd: function () {
           if (this.showAdd) {
@@ -61,11 +63,16 @@
           }
           this.toggleShowAddState();
         },
-        createMovie: function () {
-          if (this.item.type === 'movie') {
-            this.addItem(this.item);
+        createMovie: async function () {
+          try {
+            let res = await addMovie(this.item);
+            let movies = res.data.movies;
+            this.setMovies(movies);
+            this.item = Object.assign({}, this.blankItem);
+            this.$toaster.success("Movie successfully added!")
+          } catch (e) {
+            this.$toaster.error("Couldn't add movie")
           }
-          this.item = Object.assign({}, this.blankItem);
           this.toggleShowAdd();
         },
       },

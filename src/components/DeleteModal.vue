@@ -23,7 +23,9 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex';
-    export default {
+  import {deleteMovie} from "../apiConnector";
+
+  export default {
       name: "delete-modal",
       data() {
         return {
@@ -36,12 +38,20 @@
       },
       methods: {
         ...mapActions({
-          deleteItem: 'deleteItem',
-          toggleShowDelete: 'toggleShowDelete'
+          toggleShowDelete: 'toggleShowDelete',
+          setMovies: 'setMovies'
         }),
-        removeItem: function () {
+        removeItem: async function () {
+          try {
+            let res = await deleteMovie(this.currentItem.id);
+            let movies = res.data.movies;
+            this.setMovies(movies);
+            this.$toaster.success("Movie deleted!")
+          } catch (e) {
+            console.log(e);
+            this.$toaster.error("Something went wrong")
+          }
           this.toggleShowDelete();
-          this.deleteItem(this.currentItem);
         },
       }
     }
